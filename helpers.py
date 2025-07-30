@@ -73,3 +73,4 @@ def send_password_reset_otp(email, otp):
         f"Orbiqe Technologies Pvt. Ltd.\n"
     )
     mail.send(msg)
+    #this is comment to test push
