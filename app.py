@@ -15,6 +15,7 @@ from xhtml2pdf import pisa
 from io import BytesIO
 import datetime
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 app.permanent_session_lifetime = timedelta(hours=1, minutes=20)
@@ -43,7 +44,7 @@ def register():
 
     password = request.form.get('password')
 
-    # ✅ Check strong password
+    # Check strong password
     import re
     def is_strong_password(pw):
         return (
@@ -55,8 +56,9 @@ def register():
     if not is_strong_password(password):
         flash("Password must be at least 8 characters long and include at least one number and one special character.")
         return redirect(url_for('home'))
-
-    existing = User.query.filter_by(email=email).first()
+    existing = db.session.execute(db.select(User).filter_by(email=email)).first()
+    # User.query.filter_by(email=email).first()
+ 
     if existing:
         flash("Email already registered. Please login.")
         return redirect(url_for('login'))
