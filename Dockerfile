@@ -4,11 +4,10 @@ WORKDIR /app
 
 COPY . /app
 
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port Flask will run on
 EXPOSE 8080
 
-# Command to run the Flask app
-CMD ["python", "app.py"]
+ENV FLASK_APP=app.py
+
+CMD ["flask", "run", "--host=0.0.0.0"]
