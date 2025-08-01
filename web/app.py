@@ -13,7 +13,10 @@ from datetime import timedelta
 from flask import make_response, render_template
 from xhtml2pdf import pisa
 from io import BytesIO
+from flask import Flask, jsonify
+
 import datetime
+import logging
 
 
 app = Flask(__name__)
@@ -23,6 +26,20 @@ app.permanent_session_lifetime = timedelta(hours=1, minutes=20)
 
 db.init_app(app)
 mail.init_app(app)
+
+#=============== Logging Configuration ===========
+# Configure Flask logging
+app.logger.setLevel(logging.INFO)  # Set log level to INFO
+handler = logging.FileHandler('app.log')  # Log to a file
+handler.setLevel(logging.ERROR)  # Log only errors and above
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+app.logger.addHandler(handler)
+
+@app.errorhandler(500)
+def server_error(error):
+    app.logger.exception('An exception occurred during a request.')
+    return error, 500
+
 
 # ========== ROUTES ==========
 
@@ -474,4 +491,4 @@ def page_not_found(e):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=8080)
+    app.run()

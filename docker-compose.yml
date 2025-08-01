@@ -1,0 +1,14 @@
+services:
+  web:
+    build: ./web
+    expose:
+      - "5000"
+
+  nginx-proxy:
+    build: ./proxy
+    ports:
+      - "80:80"
+    volumes:
+      - "/var/log/nginx:/var/log/nginx"
+    depends_on:
+      - web
